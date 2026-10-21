@@ -1,0 +1,54 @@
+# ===== 密钥与配置（最重要，放最前面）=====
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets.json
+config.local.*
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ===== 虚拟环境 =====
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# ===== 测试与缓存 =====
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.tox/
+
+# ===== Jupyter =====
+.ipynb_checkpoints/
+
+# ===== 数据与产物（大文件不要进 Git）=====
+data/
+outputs/
+*.log
+*.sqlite3
+*.db
+
+# ===== IDE / 编辑器 =====
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ===== 操作系统 =====
+.DS_Store
+Thumbs.db
+desktop.ini
