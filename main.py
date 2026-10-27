@@ -5,14 +5,15 @@
     python main.py "解释一下 Agent" --system "你是一个只用一句话回答的助手"
 """
 import argparse
-import logging
 import sys
+import logging
+
 from core.config import ConfigError, load_config
 from core.llm_client import LLMClient, LLMError
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-)
+from core.logging_config import setup_logging
+
+logger = logging.getLogger(__name__)
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="问 DeepSeek 一个问题")
     parser.add_argument(
@@ -24,11 +25,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--system", default=None, help="可选的 system 提示词")
     return parser
 def main() -> int:
+    setup_logging()
     args = build_parser().parse_args()
     try:
         cfg = load_config()
     except ConfigError as exc:
-        print(f"配置错误：{exc}")
+        # 既打日志，又给用户友好的控制台提示
+        logger.error("配置有问题：%s", exc)
+        print(f"❌ 配置错误：{exc}")
         return 1
     client = LLMClient(
         api_key=cfg["api_key"],
@@ -38,9 +42,12 @@ def main() -> int:
     try:
         answer = client.ask(args.question, system=args.system)
     except LLMError as exc:
-        print(f"调用失败：{exc}")
+        logger.error("调用大模型失败：%s", exc)
+        print(f"❌ 调用失败：{exc}")
         return 1
+    print("\n" + "="*40)
     print(answer)
+    print("="*40 + "\n")
     return 0
 if __name__ == "__main__":
     sys.exit(main())

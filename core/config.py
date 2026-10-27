@@ -6,10 +6,9 @@
 """
 import os
 from dotenv import load_dotenv
+from core.exceptions import ConfigError
 DEFAULT_MODEL = "deepseek-chat"
 DEFAULT_BASE_URL = "https://api.deepseek.com"
-class ConfigError(Exception):
-    """配置缺失或非法时抛出。"""
 def load_config() -> dict:
     """读取配置，返回 {api_key, model, base_url}。
     Raises:
@@ -21,6 +20,11 @@ def load_config() -> dict:
         raise ConfigError(
             "未找到 DEEPSEEK_API_KEY。请在项目根目录创建 .env 文件，"
             "内容形如：DEEPSEEK_API_KEY=sk-xxxx"
+        )
+    if not api_key.startswith("sk-"):
+        raise ConfigError(
+            f"API Key 格式异常（应以 sk- 开头，当前是 {api_key[:3]}...）。"
+            "请检查 .env 是否填对了。"
         )
     return {
         "api_key": api_key,
