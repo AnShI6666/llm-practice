@@ -1,33 +1,34 @@
-"""配置管理：从 .env 读取并校验运行所需的环境变量。
-设计要点：
-- 把「读环境变量 + 校验 + 报错」从主逻辑里分离出去
-- 用自定义异常 ConfigError 区分「配置问题」和「网络问题」
-- 所有可配置项都允许用环境变量覆盖（MODEL / BASE_URL）
-"""
+"""配置管理：从 .env 读取并校验。"""
 import os
+
 from dotenv import load_dotenv
+
 from core.exceptions import ConfigError
-DEFAULT_MODEL = "deepseek-chat"
-DEFAULT_BASE_URL = "https://api.deepseek.com"
-def load_config() -> dict:
-    """读取配置，返回 {api_key, model, base_url}。
+from core.models import Config
+
+
+def load_config() -> Config:
+    """读取配置，返回已校验的 Config 对象。
+
     Raises:
-        ConfigError: 缺少 DEEPSEEK_API_KEY 时。
+        ConfigError: 缺少环境变量或校验失败时。
     """
     load_dotenv()
-    api_key = os.environ.get("DEEPSEEK_API_KEY")
+
+    api_key = os.environ.get("DEEPSEEK_API_KEY", "")
     if not api_key:
         raise ConfigError(
             "未找到 DEEPSEEK_API_KEY。请在项目根目录创建 .env 文件，"
             "内容形如：DEEPSEEK_API_KEY=sk-xxxx"
         )
-    if not api_key.startswith("sk-"):
-        raise ConfigError(
-            f"API Key 格式异常（应以 sk- 开头，当前是 {api_key[:3]}...）。"
-            "请检查 .env 是否填对了。"
-        )
-    return {
-        "api_key": api_key,
-        "model": os.environ.get("MODEL", DEFAULT_MODEL),
-        "base_url": os.environ.get("BASE_URL", DEFAULT_BASE_URL),
-    }
+
+    try:
+        return Config(api_key=api_key,
+            model=os.environ.get("MODEL", "deepseek-chat"),
+            base_url=os.environ.get("BASE_URL", "https://api.deepseek.com"),
+            # 注意：如果用户填了 TIMEOUT=abc，float() 会报错，现在它会被下面的 except 捕获
+            timeout=float(os.environ.get("TIMEOUT", "30")),
+            max_retries=int(os.environ.get("MAX_RETRIES", "4")),)
+    except Exception as exc:
+        # 把 pydantic 的校验错误翻译成我们的 ConfigError
+        raise ConfigError(f"配置校验失败：{exc}") from exc

@@ -9,31 +9,20 @@ from core.exceptions import (
 from core.llm_client import classify_error
 
 
-def _http_error(status: int) -> Exception:
-    """构造一个带状态码的异常。"""
-    resp = httpx.Response(status_code=status, request=httpx.Request("POST", "http://x"))
-    return httpx.HTTPStatusError("err", request=resp.request, response=resp)
+@pytest.mark.parametrize("status,expected", [
+    (401, LLMAuthError),
+    (403, LLMAuthError),
+    (400, LLMBadRequestError),
+    (429, LLMRateLimitError),
+    (500, LLMServerError),
+    (502, LLMServerError),
+    (503, LLMServerError),
+])
+def test_http_status_classification(make_http_error, status, expected):
+    """HTTP 状态码 → 异常类型的映射表。"""
+    assert isinstance(classify_error(make_http_error(status)), expected)
 
 
-def test_401_is_auth_error():
-    assert isinstance(classify_error(_http_error(401)), LLMAuthError)
-
-
-def test_403_is_auth_error():
-    assert isinstance(classify_error(_http_error(403)), LLMAuthError)
-
-
-def test_429_is_rate_limit():
-    assert isinstance(classify_error(_http_error(429)), LLMRateLimitError)
-
-
-def test_400_is_bad_request():
-    assert isinstance(classify_error(_http_error(400)), LLMBadRequestError)
-
-
-def test_500_is_server_error():
-    assert isinstance(classify_error(_http_error(500)), LLMServerError)
-
-
-def test_timeout_detected():
+def test_timeout_classification():
+    """超时应该被识别。"""
     assert isinstance(classify_error(TimeoutError("timed out")), LLMTimeoutError)

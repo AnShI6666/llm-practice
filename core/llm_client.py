@@ -9,7 +9,7 @@
 import logging
 import random
 import time
-
+from typing import Final, Literal, TypedDict  # 新增类型导入
 import httpx
 from openai import OpenAI
 
@@ -24,7 +24,7 @@ from core.exceptions import (
     LLMUnknownError,
 )
 
-logger = logging.getLogger(__name__)
+logger: Final = logging.getLogger(__name__)
 
 # 向后兼容：老代码 from core.llm_client import LLMError 仍然可用
 __all__ = ["LLMClient", "LLMError", "classify_error", "RETRYABLE"]
@@ -32,6 +32,21 @@ __all__ = ["LLMClient", "LLMError", "classify_error", "RETRYABLE"]
 # 可重试的异常类型（与 exceptions.py 里的注释一一对应）
 RETRYABLE = (LLMTimeoutError, LLMRateLimitError, LLMServerError)
 
+class ChatMessage(TypedDict):
+    """消息字典的精确类型。"""
+    role: Literal["system", "user", "assistant"]
+    content: str
+
+def _build_messages(question: str, system: str | None) -> list[ChatMessage]:
+    """构造消息列表。
+
+    抽成独立函数的好处：可以单独测试，不用启动整个 client。
+    """
+    messages: list[ChatMessage] = []
+    if system:
+        messages.append({"role": "system", "content": system})
+    messages.append({"role": "user", "content": question})
+    return messages
 
 def classify_error(exc: Exception) -> LLMError:
     """把底层 SDK 的各种异常翻译成项目自己的异常类型。
@@ -94,10 +109,7 @@ class LLMClient:
         Raises:
             LLMError: 其子类；不可重试的立刻抛，可重试的重试完仍失败才抛。
         """
-        messages = []
-        if system:
-            messages.append({"role": "system", "content": system})
-        messages.append({"role": "user", "content": question})
+        messages = _build_messages(question, system)
 
         logger.info("提问：%s", question[:50])
         last_error: LLMError | None = None
@@ -105,9 +117,11 @@ class LLMClient:
         for attempt in range(1, self.max_retries + 1):
             try:
                 resp = self._client.chat.completions.create(
-                    model=self.model, messages=messages, stream=False,
+                    model=self.model,
+                    messages=messages,  # type: ignore
+                    stream=False,
                 )
-                answer = resp.choices[0].message.content or ""
+                answer = resp.choices[0].message.content or ""  # type: ignore
                 logger.info("回答成功，长度 %d 字符", len(answer))
                 return answer
 
