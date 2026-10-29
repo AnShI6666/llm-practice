@@ -159,4 +159,4 @@ class LLMClient:
         else:
             base = 1.0 * (2 ** (attempt - 1))
         jitter = random.uniform(0, 0.5)
-        return base + jitter
+        return float(base + jitter)

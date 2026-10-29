@@ -22,7 +22,7 @@ class Config(BaseModel):
     @classmethod
     def _check_key_prefix(cls, v: str) -> str:
         """Key 必须以 sk- 开头，且不能有空白字符。"""
-        v = v.strip()
+        v = v.strip()  #去除api_key前面的空白
         if not v.startswith("sk-"):
             raise ValueError(f"API Key 应以 sk- 开头，当前是 {v[:3]}...")
         return v

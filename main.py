@@ -35,7 +35,11 @@ def main() -> int:
         print(f"❌ 配置错误：{exc}")
         return 1
     client = LLMClient(
-        api_key=cfg.api_key, model=cfg.model, base_url=cfg.base_url
+        api_key=cfg.api_key,
+        model=cfg.model,
+        base_url=cfg.base_url,
+        timeout=cfg.timeout,
+        max_retries=cfg.max_retries
     )
     try:
         answer = client.ask(args.question, system=args.system)
