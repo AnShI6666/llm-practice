@@ -43,3 +43,13 @@ def test_bad_base_url_rejected(bad_url):
     """base_url 必须是 http(s)://。"""
     with pytest.raises(ValidationError):
         Config(api_key="sk-1234567890abcdef", base_url=bad_url)
+
+def test_invalid_chunk_rejected():
+    """验证 end_char 必须大于 start_char。"""
+    from core.models import Chunk
+    with pytest.raises(ValidationError):
+        Chunk(
+            chunk_id="c1", doc_id="d1", text="abc",
+            start_char=10, end_char=5, # 故意写错
+            char_count=3, token_estimate=1
+        )

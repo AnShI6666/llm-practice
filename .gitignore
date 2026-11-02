@@ -42,6 +42,8 @@ outputs/
 *.log
 *.sqlite3
 *.db
+data/raw/
+data/processed/
 
 # ===== IDE / 编辑器 =====
 .vscode/

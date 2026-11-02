@@ -2,11 +2,11 @@
 
 conftest.py 会被 pytest 自动发现，里面的 fixture 所有测试文件都能用。
 """
-from unittest.mock import MagicMock
-
 import pytest
-
 from core.llm_client import LLMClient
+from core.models import Document, DocumentType, ChunkingConfig
+from pathlib import Path
+from unittest.mock import MagicMock
 
 @pytest.fixture
 def fake_llm_client() -> LLMClient:
@@ -35,4 +35,19 @@ def make_http_error():
         resp = httpx.Response(status_code=status, request=req)
         return httpx.HTTPStatusError("err", request=req, response=resp)
 
+    return _make
+
+@pytest.fixture
+def make_doc():
+    def _make(text="这是一段测试文本。包含多个句子。用来验证切块。", doc_id="test_doc"):
+        return Document(
+            doc_id=doc_id, source_path=Path(f"{doc_id}.md"),
+            doc_type=DocumentType.MARKDOWN, raw_text=text
+        )
+    return _make
+
+@pytest.fixture
+def make_config():
+    def _make(size=50, overlap=10, strategy="fixed"):
+        return ChunkingConfig(chunk_size=size, overlap=overlap, strategy=strategy)
     return _make
