@@ -2,7 +2,7 @@
 
 这是**基线策略**——其他策略必须证明自己比它好，否则就用它。
 """
-from core.chunkers.base import Chunker
+from core.chunkers.base import Chunker, estimate_tokens
 from core.models import Chunk, ChunkingConfig, Document
 
 
@@ -30,13 +30,3 @@ class FixedChunker(Chunker):
                 break
             start = end - ov
         return chunks
-
-
-def estimate_tokens(text: str) -> int:
-    """粗略估算 token 数：中文约 1 字 = 1 token，英文约 4 字符 = 1 token。
-
-    为什么不调用真实 tokenizer：慢、需要额外依赖、且分块阶段只需要相对比较。
-    """
-    cjk = sum(1 for c in text if "\u4e00" <= c <= "\u9fff")
-    other = len(text) - cjk
-    return max(1, cjk + other // 4)
