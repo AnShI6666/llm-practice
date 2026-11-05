@@ -32,10 +32,10 @@ def test_merge_short_chunks(make_doc, make_config):
     c1 = Chunk(chunk_id="1", doc_id="doc", text="短块1", start_char=0, end_char=3, char_count=3, token_estimate=1)
     c2 = Chunk(chunk_id="2", doc_id="doc", text="短块2", start_char=3, end_char=6, char_count=3, token_estimate=1)
 
-    merged = merge_short_chunks([c1, c2], min_chars=10)
+    merged = merge_short_chunks([c1, c2], "短块1短块2", min_chars=10)
 
     assert len(merged) == 1
-    assert merged[0].text == "短块1\n\n短块2"
+    assert merged[0].text == "短块1短块2"
     assert merged[0].start_char == 0
     assert merged[0].end_char == 6
-    assert merged[0].char_count == 8
+    assert merged[0].char_count == 6

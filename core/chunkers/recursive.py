@@ -22,7 +22,7 @@ class RecursiveChunker(Chunker):
                     char_count=len(text),
                     token_estimate=estimate_tokens(text)
                 ))
-        return merge_short_chunks(chunks, min_chars=100, max_chars=config.chunk_size)
+        return merge_short_chunks(chunks, doc.raw_text, min_chars=100, max_chars=config.chunk_size)
 
     def _split_text(
         self,

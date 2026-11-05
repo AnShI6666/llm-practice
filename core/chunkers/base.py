@@ -12,7 +12,7 @@ class Chunker(ABC):
     def chunk(self, doc: Document, config: ChunkingConfig) -> list[Chunk]:
         """把文档切成块。"""
 
-def merge_short_chunks(chunks: list[Chunk], min_chars: int = 100, max_chars: int = 800) -> list[Chunk]:
+def merge_short_chunks(chunks: list[Chunk],raw_text: str, min_chars: int = 100, max_chars: int = 800) -> list[Chunk]:
     """合并过短的相邻块：如果某块 < min_chars，尝试与后一块合并。
 
     合并后必须更新 text, start_char, end_char, char_count, token_estimate。
@@ -24,10 +24,8 @@ def merge_short_chunks(chunks: list[Chunk], min_chars: int = 100, max_chars: int
     current = chunks[0]
 
     for next_chunk in chunks[1:]:
-        # 如果当前块太短，且合并后不会撑爆（这里限制最大 800 字，可根据 config 调整）
         if current.char_count < min_chars and (current.char_count + next_chunk.char_count) <= max_chars:
-            # 拼接文本
-            new_text = current.text + "\n\n" + next_chunk.text
+            new_text = raw_text[current.start_char:next_chunk.end_char]
             current = Chunk(
                 chunk_id=current.chunk_id,  # 沿用前一个的 ID
                 doc_id=current.doc_id,

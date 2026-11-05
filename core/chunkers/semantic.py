@@ -23,7 +23,7 @@ class SemanticChunker(Chunker):
 
         if not marks:
             # 没有标题：退化为按空行分段
-            return merge_short_chunks(self._by_paragraph(doc, config))
+            return merge_short_chunks(self._by_paragraph(doc, config), doc.raw_text, min_chars=100, max_chars=config.chunk_size)
 
         # 按标题切段，过长再二次切
         for i, (pos, title, level) in enumerate(marks):
@@ -43,7 +43,7 @@ class SemanticChunker(Chunker):
                     char_count=len(sub_text),
                     token_estimate=estimate_tokens(sub_text),
                 ))
-        return merge_short_chunks(chunks, min_chars=100, max_chars=config.chunk_size)
+        return merge_short_chunks(chunks, doc.raw_text, min_chars=100, max_chars=config.chunk_size)
 
     def _split_long(self, seg: str, config: ChunkingConfig):
         """段落超过 chunk_size 时二次切分。"""

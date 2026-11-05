@@ -14,6 +14,7 @@ class Config(BaseModel):
     """运行配置。"""
 
     api_key: str = Field(..., min_length=10, description="DeepSeek API Key")
+    zhipu_api_key: str = Field(default="", description="智谱 API Key (用于 Embedding)")
     model: str = Field(default="deepseek-chat")
     base_url: str = Field(default="https://api.deepseek.com")
     timeout: float = Field(default=30.0, gt=0, le=300)

@@ -23,7 +23,9 @@ def load_config() -> Config:
         )
 
     try:
-        return Config(api_key=api_key,
+        return Config(
+            api_key=api_key,
+            zhipu_api_key=os.environ.get("ZHIPU_API_KEY", ""),
             model=os.environ.get("MODEL", "deepseek-chat"),
             base_url=os.environ.get("BASE_URL", "https://api.deepseek.com"),
             # 注意：如果用户填了 TIMEOUT=abc，float() 会报错，现在它会被下面的 except 捕获
