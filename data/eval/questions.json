@@ -1,0 +1,327 @@
+[
+  {
+    "id": "q001",
+    "type": "fact",
+    "question": "手冲咖啡一般建议用多少度的水？",
+    "gold_doc": "02-手冲咖啡入门指南",
+    "should_abstain": false,
+    "notes": "核心变量表格",
+    "gold_spans": [
+      [
+        424,
+        436
+      ]
+    ]
+  },
+  {
+    "id": "q002",
+    "type": "fact",
+    "question": "在 Git 的哪种分支策略下，开发人员会直接向 main 提交或者使用短分支？",
+    "gold_doc": "03-Git分支策略对比",
+    "should_abstain": false,
+    "notes": "主干开发特征",
+    "gold_spans": [
+      [
+        218,
+        250
+      ]
+    ]
+  },
+  {
+    "id": "q003",
+    "type": "fact",
+    "question": "睡眠周期中，哪个阶段主要负责身体修复和免疫？",
+    "gold_doc": "04-睡眠的科学",
+    "should_abstain": false,
+    "notes": "深睡作用",
+    "gold_spans": [
+      [
+        225,
+        260
+      ]
+    ]
+  },
+  {
+    "id": "q004",
+    "type": "fact",
+    "question": "摄影构图中的三分法，建议把地平线放在什么位置？",
+    "gold_doc": "06-摄影构图笔记",
+    "should_abstain": false,
+    "notes": "三分法避坑",
+    "gold_spans": [
+      [
+        272,
+        305
+      ]
+    ]
+  },
+  {
+    "id": "q005",
+    "type": "fact",
+    "question": "家庭网络中，网线至少要达到什么级别才能满足千兆带宽的需求？",
+    "gold_doc": "09-家庭网络优化",
+    "should_abstain": false,
+    "notes": "网线选型",
+    "gold_spans": [
+      [
+        574,
+        606
+      ]
+    ]
+  },
+  {
+    "id": "q006",
+    "type": "fact",
+    "question": "财务规划中，应急金的目标金额通常设定为几个月的生存成本？",
+    "gold_doc": "07-个人财务第一性原理",
+    "should_abstain": false,
+    "notes": "应急金标准",
+    "gold_spans": [
+      [
+        333,
+        364
+      ]
+    ]
+  },
+  {
+    "id": "q007",
+    "type": "multi_hop",
+    "question": "为什么在下午三点喝咖啡可能会导致晚上入睡困难？",
+    "gold_doc": "04-睡眠的科学",
+    "should_abstain": false,
+    "notes": "跨段落：咖啡因半衰期 + 睡眠压力",
+    "gold_spans": [
+      [
+        721,
+        770
+      ]
+    ]
+  },
+  {
+    "id": "q008",
+    "type": "multi_hop",
+    "question": "根据文中所述，如何从咖啡的味道反推出是哪个手冲变量出了问题？",
+    "gold_doc": "02-手冲咖啡入门指南",
+    "should_abstain": false,
+    "notes": "需要结合四个核心变量与味道反向调试",
+    "gold_spans": [
+      [
+        886,
+        920
+      ]
+    ]
+  },
+  {
+    "id": "q009",
+    "type": "multi_hop",
+    "question": "为什么在 Git Flow 中，长期存在的 develop 分支会有风险？",
+    "gold_doc": "03-Git分支策略对比",
+    "should_abstain": false,
+    "notes": "需要理解分支流向与合并冲突",
+    "gold_spans": [
+      [
+        1314,
+        1361
+      ]
+    ]
+  },
+  {
+    "id": "q010",
+    "type": "multi_hop",
+    "question": "作者建议采用哪些具体的策略来对抗“时间不够”这个假象？",
+    "gold_doc": "01-时间管理的底层逻辑",
+    "should_abstain": false,
+    "notes": "需要汇总深读、浅层、恢复时间的策略",
+    "gold_spans": [
+      [
+        570,
+        605
+      ]
+    ]
+  },
+  {
+    "id": "q011",
+    "type": "multi_hop",
+    "question": "如果发现无论换什么设备测速都在百兆左右，可能是什么原因且如何解决？",
+    "gold_doc": "09-家庭网络优化",
+    "should_abstain": false,
+    "notes": "需要结合排查顺序的第一、二步",
+    "gold_spans": [
+      [
+        645,
+        692
+      ]
+    ]
+  },
+  {
+    "id": "q012",
+    "type": "unanswerable",
+    "question": "这篇文章的作者本人平时有喝手冲咖啡的习惯吗？",
+    "gold_doc": "02-手冲咖啡入门指南",
+    "should_abstain": true,
+    "notes": "文档未提及作者背景",
+    "gold_spans": []
+  },
+  {
+    "id": "q013",
+    "type": "unanswerable",
+    "question": "个人财务文章中提到的“沪深300指数基金”，其具体的年度管理费率是多少？",
+    "gold_doc": "07-个人财务第一性原理",
+    "should_abstain": true,
+    "notes": "文中只提到整体主动基金费率，未具体到沪深300",
+    "gold_spans": []
+  },
+  {
+    "id": "q014",
+    "type": "unanswerable",
+    "question": "Git 主干开发策略中，要求开发团队每天至少提交多少个 commit？",
+    "gold_doc": "03-Git分支策略对比",
+    "should_abstain": true,
+    "notes": "文中只说“小而频繁”，无具体数字",
+    "gold_spans": []
+  },
+  {
+    "id": "q015",
+    "type": "unanswerable",
+    "question": "城市漫步指南里提到的那家“开了三十年、招牌已经掉色的修表店”，位于哪一条街？",
+    "gold_doc": "10-城市漫步指南",
+    "should_abstain": true,
+    "notes": "只是举例子，无具体地点",
+    "gold_spans": []
+  },
+  {
+    "id": "q016",
+    "type": "unanswerable",
+    "question": "睡眠科学里提到的“建设性担忧”方法，是由哪位心理学家提出的？",
+    "gold_doc": "04-睡眠的科学",
+    "should_abstain": true,
+    "notes": "文中未提到人名",
+    "gold_spans": []
+  },
+  {
+    "id": "q017",
+    "type": "trap",
+    "question": "手冲咖啡时，为了萃取更充分，最好把水温和研磨度同时调高，对吗？",
+    "gold_doc": "02-手冲咖啡入门指南",
+    "should_abstain": true,
+    "notes": "原文说“一次只动一个变量”，问题故意说反",
+    "gold_spans": []
+  },
+  {
+    "id": "q018",
+    "type": "trap",
+    "question": "在家庭网络设置中，如果家里有承重墙挡住5G信号，应该把 2.4G 频段关掉来强迫手机连 5G，对吗？",
+    "gold_doc": "09-家庭网络优化",
+    "should_abstain": true,
+    "notes": "原文说“问题不是频段，是需要加节点”",
+    "gold_spans": []
+  },
+  {
+    "id": "q019",
+    "type": "trap",
+    "question": "文章认为，像 Git Flow 这种多分支模型，因为严谨，所以更适合一天部署多次的团队，对吗？",
+    "gold_doc": "03-Git分支策略对比",
+    "should_abstain": true,
+    "notes": "原文说“在持续部署场景下属于过度设计”",
+    "gold_spans": []
+  },
+  {
+    "id": "q020",
+    "type": "trap",
+    "question": "投资时，如果想要获得超额收益，就应该频繁买卖不同的主动型基金来择时，对吗？",
+    "gold_doc": "07-个人财务第一性原理",
+    "should_abstain": true,
+    "notes": "原文推荐指数基金、定投，反对频繁换标的、择时",
+    "gold_spans": []
+  },
+  {
+    "id": "q021",
+    "type": "fact",
+    "question": "我早上起来用刚烧开的滚水直接冲咖啡粉，喝起来又苦又涩，是不是水温太高了？",
+    "gold_doc": "02-手冲咖啡入门指南",
+    "gold_spans": [
+      [
+        921,
+        957
+      ],
+      [
+        1035,
+        1068
+      ]
+    ],
+    "should_abstain": false,
+    "notes": "难点：全大白话，原文根本没有“滚水”、“苦”、“涩”这几个词，原文用的是“水温 88-94 ℃”和“过度萃取”。锚点：'太苦、回味发干** → 过度萃取。研磨调粗，或水温降低 2 ℃。'"
+  },
+  {
+    "id": "q022",
+    "type": "multi_hop",
+    "question": "我们只有三个程序员，每天恨不得上线好几次，是不是千万别用那套带 develop 和 release 的复杂流程？",
+    "gold_doc": "03-Git分支策略对比",
+    "gold_spans": [
+      [
+        1399,
+        1425
+      ],
+      [
+        1512,
+        1568
+      ]
+    ],
+    "should_abstain": false,
+    "notes": "难点：口语化提问，避开了 'Git Flow', '主干开发' 这些原词。答案指向前者适合一天多次部署的小团队。锚点：'**适合**：成熟团队、SaaS 产品、一天多次部署。'"
+  },
+  {
+    "id": "q023",
+    "type": "fact",
+    "question": "我每天晚上 11 点睡，早上 7 点起，睡了 8 个钟头，为什么去上班还是觉得脑子昏昏沉沉的？",
+    "gold_doc": "04-睡眠的科学",
+    "gold_spans": [
+      [
+        468,
+        505
+      ],
+      [
+        591,
+        628
+      ]
+    ],
+    "should_abstain": false,
+    "notes": "难点：场景化提问。原文是专业的 'N3深睡', 'REM'。锚点：'真正影响白天状态的，是三个东西：1. **连续性**'"
+  },
+  {
+    "id": "q024",
+    "type": "fact",
+    "question": "家里刚办了千兆宽带，但电脑插网线测速死活只有 90 多兆，是不是路由器坏了？",
+    "gold_doc": "09-家庭网络优化",
+    "gold_spans": [
+      [
+        536,
+        570
+      ],
+      [
+        645,
+        692
+      ]
+    ],
+    "should_abstain": false,
+    "notes": "难点：数字替换（千兆变90多）。原文用的是 'Cat5', '94 Mbps'。锚点：'一个典型症状：无论怎么换设备，测速都卡在 **94 Mbps** 左右。'"
+  },
+  {
+    "id": "q025",
+    "type": "multi_hop",
+    "question": "为什么我买了好几把上千块的贵价水壶，冲出来的咖啡还是不如店里的好喝？",
+    "gold_doc": "02-手冲咖啡入门指南",
+    "gold_spans": [
+      [
+        246,
+        285
+      ],
+      [
+        1253,
+        1323
+      ]
+    ],
+    "should_abstain": false,
+    "notes": "难点：反向提问。原文明说磨豆机最重要。锚点：'**这是最重要的一件**，比壶重要得多'"
+  }
+]

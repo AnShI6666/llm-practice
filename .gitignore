@@ -37,13 +37,12 @@ htmlcov/
 .ipynb_checkpoints/
 
 # ===== 数据与产物（大文件不要进 Git）=====
-data/
-outputs/
-*.log
-*.sqlite3
-*.db
+data/*
+!data/eval/
+data/index/
 data/raw/
 data/processed/
+eval/recall_reports/
 
 # ===== IDE / 编辑器 =====
 .vscode/
