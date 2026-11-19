@@ -107,3 +107,67 @@ class ChunkingConfig(BaseModel):
         if size is not None and v >= size:
             raise ValueError(f"overlap({v}) 必须小于 chunk_size({size})")
         return v
+class Citation(BaseModel):
+    """一条引用。把模型输出的编号，还原成可核查的原文位置。"""
+
+    marker: int = Field(..., ge=1, description="答案里的编号，如 [1] 就是 1")
+    chunk_id: str
+    doc_id: str
+    start_char: int
+    end_char: int
+    quote: str = Field(..., description="原文片段（用于展示与人工核对）")
+
+    @property
+    def location(self) -> str:
+        """人类可读的位置描述。"""
+        return f"{self.doc_id} [{self.start_char}:{self.end_char}]"
+
+class RagAnswer(BaseModel):
+    """一次 RAG 的完整产出。"""
+
+    question: str
+    answer: str = Field(..., description="模型原始回答（含 [n] 标记）")
+    citations: list[Citation] = Field(default_factory=list)
+    # ---- 拒答标记 ----
+    abstained: bool = Field(default=False, description="是否判定为资料不足")
+    # ---- 无效引用（模型引用了不存在的编号）----
+    invalid_markers: list[int] = Field(default_factory=list)
+    # ---- 成本与耗时 ----
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+    latency_ms: int = 0
+
+    def render(self) -> str:
+        lines: list[str] = []
+        lines.append(f"问题：{self.question}")
+        lines.append("")
+        lines.append("回答：")
+        lines.append(self.answer)
+        lines.append("")
+        lines.append("【引用】")
+
+        if not self.citations:
+            lines.append("（无）")
+
+        for c in self.citations:
+            # 折叠换行和多余空白，避免一条引用占十几行
+            q = " ".join(c.quote.split())
+            if len(q) > 120:
+                q = q[:120] + "…"
+            lines.append(f"[{c.marker}] {c.location}")
+            lines.append(f'    "{q}"')
+
+        if self.invalid_markers:
+            lines.append("")
+            lines.append(f"⚠️ 无效引用编号：{self.invalid_markers}")
+
+        if self.abstained:
+            lines.append("")
+            lines.append("（已判定为资料不足，拒答）")
+
+        lines.append("")
+        lines.append(
+            f"【统计】prompt {self.prompt_tokens} token / "
+            f"完成 {self.completion_tokens} token / 耗时 {self.latency_ms}ms"
+        )
+        return "\n".join(lines)

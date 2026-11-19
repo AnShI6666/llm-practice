@@ -14,12 +14,16 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from core.loaders.markdown import MarkdownLoader  # noqa: E402
-
+from typing import TypedDict
 QUESTIONS = ROOT / "data/eval/questions.json"
+
+class _FixEntry(TypedDict):
+    gold_doc: str
+    gold_spans: list[list[int]]
 
 # 经人工核对过原文的正确答案区间
 # 判定依据：逐条打开原文确认「这段文字确实回答了该问题」
-FIX = {
+FIX: dict[str, _FixEntry] = {
     "q021": {
         "gold_doc": "02-手冲咖啡入门指南",
         "gold_spans": [[921, 957], [1035, 1068]],
