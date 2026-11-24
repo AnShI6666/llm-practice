@@ -104,11 +104,14 @@ class LLMClient:
         )
 
     def ask(self, question: str, system: str | None = None) -> str:
-        """发一个问题，返回回答文本。
+        """发一个问题，返回回答文本。"""
+        answer, _, _ = self.ask_with_usage(question, system)
+        return answer
 
-        Raises:
-            LLMError: 其子类；不可重试的立刻抛，可重试的重试完仍失败才抛。
-        """
+    def ask_with_usage(
+        self, question: str, system: str | None = None
+    ) -> tuple[str, int, int]:
+        """发一个问题，返回 (回答, prompt_tokens, completion_tokens)。"""
         messages = _build_messages(question, system)
 
         logger.info("提问：%s", question[:50])
@@ -122,14 +125,29 @@ class LLMClient:
                     stream=False,
                 )
                 answer = resp.choices[0].message.content or ""  # type: ignore
-                logger.info("回答成功，长度 %d 字符", len(answer))
-                return answer
 
-            except Exception as raw_exc:  # noqa: BLE001 —— 在边界处统一翻译
+                # usage 可能不存在（比如 mock 响应）；拿不到就记 0
+                usage = getattr(resp, "usage", None)
+                prompt_tokens = 0
+                completion_tokens = 0
+                if usage is not None:
+                    try:
+                        prompt_tokens = int(usage.prompt_tokens)
+                        completion_tokens = int(usage.completion_tokens)
+                    except (TypeError, ValueError):
+                        prompt_tokens = 0
+                        completion_tokens = 0
+
+                logger.info(
+                    "回答成功，长度 %d 字符，prompt %d / completion %d tokens",
+                    len(answer), prompt_tokens, completion_tokens,
+                )
+                return answer, prompt_tokens, completion_tokens
+
+            except Exception as raw_exc:  # noqa: BLE001
                 exc = classify_error(raw_exc)
                 last_error = exc
 
-                # 不可重试的错误，立刻失败
                 if not isinstance(exc, RETRYABLE):
                     logger.error("不可重试的错误（%s）：%s", type(exc).__name__, exc)
                     raise exc from raw_exc

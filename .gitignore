@@ -43,6 +43,8 @@ data/index/
 data/raw/
 data/processed/
 eval/recall_reports/
+data/traces/
+data/experiments/
 
 # ===== IDE / 编辑器 =====
 .vscode/

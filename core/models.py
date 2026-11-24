@@ -107,6 +107,7 @@ class ChunkingConfig(BaseModel):
         if size is not None and v >= size:
             raise ValueError(f"overlap({v}) 必须小于 chunk_size({size})")
         return v
+
 class Citation(BaseModel):
     """一条引用。把模型输出的编号，还原成可核查的原文位置。"""
 

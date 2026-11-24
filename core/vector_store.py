@@ -1,12 +1,9 @@
 """向量存储与检索（基于 FAISS）。"""
 import pickle
 from pathlib import Path
-
 import faiss
 import numpy as np
-
 from core.models import Chunk
-
 
 class VectorStore:
     """向量索引。负责「写入」和「按向量查最近邻」。"""

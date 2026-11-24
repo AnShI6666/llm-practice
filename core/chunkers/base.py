@@ -2,10 +2,10 @@ from abc import ABC, abstractmethod
 from core.models import Chunk, ChunkingConfig, Document
 
 def estimate_tokens(text: str) -> int:
-    """粗略估算 token 数：中文约 1 字 = 1 token，英文约 4 字符 = 1 token。"""
+    """粗略估算 token 数：中文约 1 字 = 0.85 token，英文约 4 字符 = 1 token。"""
     cjk = sum(1 for c in text if "\u4e00" <= c <= "\u9fff")
     other = len(text) - cjk
-    return max(1, cjk + other // 4)
+    return max(1,int(cjk * 0.85 + other /4))
 
 class Chunker(ABC):
     @abstractmethod
