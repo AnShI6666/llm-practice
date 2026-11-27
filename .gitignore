@@ -43,6 +43,8 @@ data/index/
 data/raw/
 data/processed/
 eval/recall_reports/
+eval/*.bak
+eval/dataset.backup_*
 data/traces/
 data/experiments/
 

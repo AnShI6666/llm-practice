@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from core.exceptions import LLMError
-from core.generator import Generator
+from core.generator import Generator, judge_abstained
 from core.llm_client import LLMClient
 from core.models import Chunk
 
@@ -90,3 +90,17 @@ def test_empty_answer_raises_llm_error():
     g, _ = make_generator("   ")
     with pytest.raises(LLMError):
         g.generate("q", [make_chunk(1)])
+
+
+def test_abstain_full_answer_with_tail_refusal_is_false():
+    answer = "水温 88–94℃ [1]。\n\n未找到相关内容。缺少：个人情况"
+    assert judge_abstained(answer) is False
+
+
+def test_abstain_paraphrase_is_true():
+    assert judge_abstained("资料中没有提到作者背景。") is True
+
+
+def test_abstain_with_long_supplement_is_false():
+    answer = "未找到相关内容。缺少：作者信息。" + "补充说明" * 30
+    assert judge_abstained(answer) is False
